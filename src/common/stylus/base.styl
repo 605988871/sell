@@ -1,0 +1,27 @@
+body, html
+  line-height: 1
+  font-weight: 200
+  font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', Arial, sans-serif
+
+//清除浮动
+.clearfix
+  display: inline-block
+
+  &:after
+    display: block//此元素将显示为块级元素，此元素前后会带有换行符。
+    content: '.'
+    line-height: 0
+    clear: both//图像的左侧和右侧均不允许出现浮动元素
+    visibility: hidden//visibility 属性规定元素是否可见
+
+@media screen and (-webkit-min-device-pixel-ratio: 1.5)
+  .border-1px
+    &::after
+      -webkit-transform: scale(0.7)
+      transform: scaleY(0.7)
+
+@media screen and (-webkit-min-device-pixel-ratio: 2)
+  .border-1px
+    &::after
+      -webkit-transform: scale(0.5)
+      transform: scaleY(0.5)
