@@ -27,6 +27,7 @@
         box-sizing: border-box
         border-radius: 50%
         background: #141d27
+
         .num
           position: absolute
           top: 0
@@ -39,8 +40,8 @@
           font-size: 9px
           font-weight: 700
           color: #fff
-          background:rgb(240,20,20)
-          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4)
+          background: rgb(240, 20, 20)
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4)
 
         .logo
           width: 100%
@@ -48,15 +49,17 @@
           border-radius: 50%
           background: #2b343c
           text-align: center
+
           &.highlight
-            background: rgb(0,160,220)
+            background: rgb(0, 160, 220)
 
           .icon-shopping_cart
             line-height: 44px
             font-size: 24px
             color: #80858a
+
             &.highlight
-              color:#fff
+              color: #fff
 
       .price
         display: inline-block
@@ -68,8 +71,9 @@
         border-right: 1px solid rgba(255, 255, 255, 0.1)
         font-size: 16px
         font-weight: 700
+
         &.highlight
-          color:#fff
+          color: #fff
 
       .desc
         display: inline-block
@@ -90,8 +94,27 @@
         font-size: 12px
         font-weight: 700
         background: #2b333b
+
         &.not-enough
           background: #2b333b
+
         &.enough
           background: #00b43c
-          color:#fff
+          color: #fff
+
+  .ball-container
+    .ball
+      position: fixed
+      left: 32px
+      bottom: 22px
+      z-index: 200
+
+      &.drop-enter, &.drop-enter-active
+        transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+
+        .inner
+          width: 16px
+          height: 16px
+          border-radius: 50%
+          background: rgb(0, 160, 220)
+          transition: all 0.4s linear

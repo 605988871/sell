@@ -1,0 +1,47 @@
+.cartcontrol
+  font-size: 0
+
+  .cart-decrease
+    display: inline-block
+
+    .inner
+      line-height: 24px
+      font-size: 24px
+      padding: 6px
+      color: rgb(0, 160, 220)
+
+    &.move-enter-active, &.move-leave-active
+      opacity: 1
+      transition: all 0.4s linear
+      transform: translate3d(0, 0, 0) /* 这样可以开启硬件加速，动画更流畅，3D旋转，X轴位移24px */
+
+      .inner
+        display: inline-block /* 设置成inline-block才有高度，才能有动画 */
+        transition: all 0.4s linear
+        transform: rotate(0)
+
+    &.move-enter, &.move-leave-active
+      opacity: 0
+      transition: all 0.4s linear
+      opacity: 0
+      transform: translate3d(24px, 0, 0)
+
+      .inner
+        transform: rotate(180deg)
+
+  .cart-count
+    display: inline-block
+    vertical-align: top
+    width: 12px
+    padding-top: 6px
+    line-height: 24px
+    text-align: center
+    font-size: 10px
+    color: rgb(147, 153, 159)
+
+  .cart-add
+    display: inline-block
+    line-height: 24px
+    font-size: 24px
+    padding: 6px
+    color: rgb(0, 160, 220)

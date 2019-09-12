@@ -35,19 +35,35 @@
                   <span class="now">¥{{food.price}}</span>
                   <span class="old" v-show="food.oldPrice">¥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <!-- 每个li代表一个food，传当前li的food对象到cartcontrol内，
+                  在cartcontrol操作food的count，
+                  然后遍历goods里的foods，
+                  将有count的food push进selectFoods内，
+                  然后将selectFoods传进shopcart组件，
+                  在shopcart组件内遍历selectFoods并将每个food的count相加统计总数-->
+                  <cartcontrol :food="food" @add="_drop"></cartcontrol>
+                  <!-- @add接收dom后运行_drop函数 -->
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
-    <shopcart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
+    <shopcart
+      ref="shopcart"
+      :select-foods="selectFoods"
+      :deliveryPrice="seller.deliveryPrice"
+      :minPrice="seller.minPrice"
+    ></shopcart>
   </div>
 </template>
 
 <script type='text/ecmascript-6'>
 import BScroll from "better-scroll";
-import shopcart from "components/goods/shopcart/shopcart"
+import shopcart from "components/goods/shopcart/shopcart";
+import cartcontrol from "components/goods/cartcontrol/cartcontrol";
 
 const ERR_OK = 0;
 export default {
@@ -73,6 +89,17 @@ export default {
         }
       }
       return 0;
+    },
+    selectFoods() {
+      let foods = [];
+      this.goods.forEach(good => {
+        good.foods.forEach(food => {
+          if (food.count) {
+            foods.push(food);
+          }
+        });
+      });
+      return foods;
     }
   },
   created() {
@@ -89,27 +116,36 @@ export default {
     });
   },
   methods: {
-    selectMenu(index,event){
+    _drop(target) {
+      //体验优化，异步执行下落动画
+      this.$nextTick(() => {
+        this.$refs.shopcart.drop(target); // 将target传入shopCart子组件中的balldrop方法，所以drop方法能获得用户点击按钮的元素，即能获取点击按钮的位置
+      });
+    },
+    selectMenu(index, event) {
       //如果派发事件的时候constructed为true，但浏览器是没有这个事件的,
       //所以可以利用constructed的值判断pc还是手机，pc的话return掉
-      if(!event._constructed){
-        return
+      if (!event._constructed) {
+        return;
       }
-      let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')//获取ul的dom
-      let el = foodList[index]//<li>数组
-      this.foodsScroll.scrollToElement(el,300)//移到index所在的li
+      let foodList = this.$refs.foodsWrapper.getElementsByClassName(
+        "food-list-hook"
+      ); //获取ul的dom
+      let el = foodList[index]; //<li>数组
+      this.foodsScroll.scrollToElement(el, 300); //移到index所在的li
     },
     //初始化better-scroll
     _initScroll() {
       this.menuScroll = new BScroll(this.$refs.menuWrapper, {
         //在手机页面better-scroll会阻止点击事件，所以要加click：true默认派发一个点击事件
         //但在pc是不会阻止，所以pc会触发两次事件，因此用constructed判断，如果pc则return
-        click:true
+        click: true
       });
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
         //当 probeType 为 1 的时候，会非实时（屏幕滑动超过一定时间后）派发scroll 事件；
         // 当 probeType 为 2 的时候，会在屏幕滑动的过程中实时的派发 scroll 事件；
         // 当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件。
+        click: true,
         probeType: 3
       });
       //获取scrollY数值，即滚动的位置的y轴坐标
@@ -133,8 +169,14 @@ export default {
       }
     }
   },
-  components:{
-    shopcart
+  components: {
+    shopcart,
+    cartcontrol
+  },
+  events: {
+    "cart.add"(target) {
+      this._drop(target);
+    }
   }
 };
 </script>
