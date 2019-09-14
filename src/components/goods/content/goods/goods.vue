@@ -167,7 +167,7 @@ export default {
         height += item.clientHeight;
         this.listHeight.push(height);
       }
-    }
+    },
   },
   components: {
     shopcart,
