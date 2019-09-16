@@ -96,9 +96,9 @@ export default {
         },
         {
           show: false
-        }
+        },
       ],
-      dropBalls: [{}],
+      dropBalls: [],
       fold: true
     };
   },
@@ -167,7 +167,7 @@ export default {
         let ball = this.balls[i];
         if (!ball.show) {
           ball.show = true;
-          //ball.el接收按钮el
+          // ball.el接收按钮el
           ball.el = el;
           this.dropBalls.push(ball);
           return;

@@ -63,7 +63,7 @@
         :minPrice="seller.minPrice"
       ></shopcart>
     </div>
-    <food :food="selectedFood" ref="food"></food>
+    <food :food="selectedFood" ref="food" @add="_drop"></food>
   </div>
 </template>
 
@@ -190,11 +190,6 @@ export default {
     cartcontrol,
     food
   },
-  events: {
-    "cart.add"(target) {
-      this._drop(target);
-    }
-  }
 };
 </script>
 <style lang='stylus' rel='stylesheet/stylus'>
