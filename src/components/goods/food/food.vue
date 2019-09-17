@@ -36,6 +36,16 @@
             <h1 class="title">商品信息</h1>
             <p class="text">{{food.info}}</p>
           </div>
+          <split></split>
+          <div class="rating">
+            <h1 class="title">商品评价</h1>
+            <ratingselect
+            :selectType="selectType"
+            :onlyContent="onlyContent"
+            :desc="desc"
+            :rating="food.ratings">
+            </ratingselect>
+          </div>
         </div>
       </div>
     </transition>
@@ -46,7 +56,13 @@
 import BScorll from "better-scroll";
 import Vue from "vue";
 import cartcontrol from "components/goods/cartcontrol/cartcontrol";
-import split from "components/goods/split/split"
+import ratingselect from "components/goods/ratingselect/ratingselect";
+import split from "components/goods/split/split";
+
+const POSITIVE = 0;
+const NEGATIVE = 1;
+const ALL = 2;
+
 export default {
   name: "",
   props: {
@@ -56,13 +72,21 @@ export default {
   },
   data() {
     return {
-      showFlag: false
+      showFlag: false,
+      selectType: ALL,
+      onlyContent: true,
+      desc:{
+        all:'全部',
+        positive:'推荐',
+        negative:'吐槽'
+      }
     };
   },
 
   components: {
     cartcontrol,
-    split
+    split,
+    ratingselect
   },
 
   computed: {},
@@ -76,6 +100,8 @@ export default {
   methods: {
     show() {
       this.showFlag = true;
+      this.selectType = ALL
+      this.onlyContent = true
       this.$nextTick(() => {
         if (!this.scroll) {
           this.scroll = new BScorll(this.$refs.food, {
