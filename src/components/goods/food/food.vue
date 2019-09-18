@@ -58,7 +58,7 @@
                     <span class="name">{{rating.username}}</span>
                     <img class="avatar" width="12" height="12" :src="rating.avatar" />
                   </div>
-                  <div class="time">{{rating.rateTime}}</div>
+                  <div class="time">{{rating.rateTime | formatDate}}</div>
                   <p class="text">
                     <span
                       :class="{'icon-thumb_up':rating.rateType===0,
@@ -68,7 +68,7 @@
                   </p>
                 </li>
               </ul>
-              <div class="no-rating" v-show="!food.ratings||!food.ratings.length"></div>
+              <div class="no-rating" v-show="!food.ratings||!food.ratings.length">暂无评论</div>
             </div>
           </div>
         </div>
@@ -80,6 +80,7 @@
 <script type='text/ecmascript-6'>
 import BScorll from "better-scroll";
 import Vue from "vue";
+import {formatDate} from 'common/js/date'
 import cartcontrol from "components/goods/cartcontrol/cartcontrol";
 import ratingselect from "components/goods/ratingselect/ratingselect";
 import split from "components/goods/split/split";
@@ -121,6 +122,13 @@ export default {
   beforeMount() {},
 
   mounted() {},
+
+  filters:{
+    formatDate(time){
+      let date = new Date(time)
+      return formatDate(date,'yyyy-MM-dd hh:mm')
+    }
+  },
 
   methods: {
     show() {
