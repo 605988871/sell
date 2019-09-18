@@ -40,11 +40,36 @@
           <div class="rating">
             <h1 class="title">商品评价</h1>
             <ratingselect
-            :selectType="selectType"
-            :onlyContent="onlyContent"
-            :desc="desc"
-            :rating="food.ratings">
-            </ratingselect>
+              :selectType="selectType"
+              :OnlyContent="onlyContent"
+              :desc="desc"
+              :ratings="food.ratings"
+              @ratingTypeSelect="ratingTypeSelect"
+              @contentToggle="contentToggle"
+            ></ratingselect>
+            <div class="rating-wrapper">
+              <ul v-show="food.ratings && food.ratings.length">
+                <li
+                  v-show="needShow(rating.rateType,rating.text)"
+                  v-for="rating in food.ratings"
+                  class="rating-item"
+                >
+                  <div class="user">
+                    <span class="name">{{rating.username}}</span>
+                    <img class="avatar" width="12" height="12" :src="rating.avatar" />
+                  </div>
+                  <div class="time">{{rating.rateTime}}</div>
+                  <p class="text">
+                    <span
+                      :class="{'icon-thumb_up':rating.rateType===0,
+                    'icon-thumb_down':rating.rateType===1}"
+                    ></span>
+                    {{rating.text}}
+                  </p>
+                </li>
+              </ul>
+              <div class="no-rating" v-show="!food.ratings||!food.ratings.length"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -75,10 +100,10 @@ export default {
       showFlag: false,
       selectType: ALL,
       onlyContent: true,
-      desc:{
-        all:'全部',
-        positive:'推荐',
-        negative:'吐槽'
+      desc: {
+        all: "全部",
+        positive: "推荐",
+        negative: "吐槽"
       }
     };
   },
@@ -100,8 +125,8 @@ export default {
   methods: {
     show() {
       this.showFlag = true;
-      this.selectType = ALL
-      this.onlyContent = true
+      this.selectType = ALL;
+      this.onlyContent = false;
       this.$nextTick(() => {
         if (!this.scroll) {
           this.scroll = new BScorll(this.$refs.food, {
@@ -125,6 +150,31 @@ export default {
     addFood(target) {
       //跟add关联的addFood方法
       this.$emit("add", target); //触发当前实例food上的事件add(在goods组件上绑定在food组件的add方法)
+    },
+    ratingTypeSelect(type) {
+      this.selectType = type;
+      this.$nextTick(()=>{
+        this.scroll.refresh()
+      })
+    },
+    contentToggle(onlyContent){
+      this.onlyContent = onlyContent
+      this.$nextTick(()=>{
+        this.scroll.refresh()
+      })
+    },
+    needShow(type,text){
+      //判断有内容的评价
+      if(this.onlyContent && !text){
+        return false
+      }
+      //判断是否选择看全部评论
+      if(this.selectType ===ALL){
+        return true
+      }else{
+        //判断每条评论的type，当这条评论的type=this.selectType时显示
+        return type === this.selectType
+      }
     }
   }
 };
