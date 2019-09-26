@@ -64,7 +64,7 @@
 </template>
 
 <script type='text/ecmascript-6'>
-import BScorll from "better-scroll"
+import BScroll from "better-scroll"
 import {formatDate} from 'common/js/date'
 import star from "components/goods/star/star";
 import ratingselect from "components/goods/ratingselect/ratingselect";
@@ -97,7 +97,7 @@ export default {
       if(response.errno === ERR_OK){
         this.ratings = response.data
         this.$nextTick(()=>{
-          this.scroll = new BScorll(this.$refs.ratings,{
+          this.scroll = new BScroll(this.$refs.ratings,{
           click: true
         })
         })
