@@ -43,6 +43,17 @@
             </li>
           </ul>
         </div>
+        <split></split>
+        <div class="pics">
+          <h1 class="title">商家实景</h1>
+          <div class="pic-wrapper" ref="picWrapper">
+            <ul class="pic-list" ref="picList">
+              <li class="pic-item" v-for="pic in seller.pics">
+                <img :src="pic" width="120" height="90" />
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -75,12 +86,14 @@ export default {
     this.classMap = ["decrease", "discount", "special", "invoice", "guarantee"];
   },
   watch: {
-    'seller'() {
+    seller() {
       this._initScroll();
+      this._initPics();
     }
   },
-  mounted(){
-    this._initScroll()
+  mounted() {
+    this._initScroll();
+    this._initPics();
   },
   methods: {
     _initScroll() {
@@ -93,7 +106,27 @@ export default {
       } else {
         this.$nextTick(() => {
           this.scroll.refresh();
-        })
+        });
+      }
+    },
+    _initPics() {
+      if (this.seller.pics) {
+        let picWidth = 120;
+        let margin = 6;
+        let width = (picWidth + margin) * this.seller.pics.length-margin;
+        this.$refs.picList.style.width = width + "px";
+        if(!this.picScroll){
+          this.$nextTick(() => {
+          this.picScroll = new BScroll(this.$refs.picWrapper, {
+            scrollX: true,
+            eventPassthrough: "vertical" //在横向轮播图中，我们可以横向滚动，而纵向的滚动还是保留页面原生滚动，我们可以设置 eventPassthrough 为 vertical。
+          });
+        });
+        }else{
+          this.$nextTick(()=>{
+            this.picScroll.refresh()
+          })
+        }
       }
     }
   }
