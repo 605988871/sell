@@ -9,7 +9,7 @@
             <span class="text">({{seller.ratingCount}})</span>
             <span class="text">月售{{seller.sellCount}}单</span>
           </div>
-          <ul class="remake">
+          <ul class="remark">
             <li class="block">
               <h2>起送价</h2>
               <div class="content">
@@ -29,6 +29,10 @@
               </div>
             </li>
           </ul>
+          <div class="favorite" @click="toggleFavorite">
+            <span class="icon-favorite" :class="{'active':favorite}"></span>
+            <span class="text">{{favoriteText}}</span>
+          </div>
         </div>
         <split></split>
         <div class="bulletin">
@@ -79,7 +83,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      favorite: false
+    };
   },
 
   components: {
@@ -87,7 +93,11 @@ export default {
     split
   },
 
-  computed: {},
+  computed: {
+    favoriteText(){
+      return this.favorite? '已收藏':'收藏'
+    }
+  },
 
   created() {
     this.classMap = ["decrease", "discount", "special", "invoice", "guarantee"];
@@ -103,6 +113,12 @@ export default {
     this._initPics();
   },
   methods: {
+    toggleFavorite(event){
+      if(!event._constructed){
+        return
+      }
+      this.favorite = !this.favorite
+    },
     _initScroll() {
       if (!this.scroll) {
         this.$nextTick(() => {

@@ -17,19 +17,33 @@
 </template>
 
 <script>
+import { urlParse } from "@/common/js/until";
 import header from "@/components/goods/header/header";
-const ERR_OK = 0
+const ERR_OK = 0;
 export default {
   data() {
     return {
-      seller: {}
+      seller: {
+        id: (() => {
+          let queryParam = urlParse();
+          console.log(queryParam);
+          return queryParam.id;
+        })()
+      }
     };
   },
   created() {
-    this.$http.get("/api/seller").then((response) => {
+    this.$http.get("/api/seller?id=" + this.seller.id).then(response => {
       response = response.body;
-      if(response.errno===ERR_OK){
-        this.seller = response.data
+      if (response.errno === ERR_OK) {
+        //Object.assign方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象
+        //const target = { a: 1, b: 1 };
+        // const source1 = { b: 2, c: 2 };
+        // const source2 = { c: 3 };
+        // Object.assign(target, source1, source2);
+        // target  {a:1, b:2, c:3}
+        this.seller = Object.assign({}, this.seller, response.data);
+
       }
     });
   },
@@ -46,7 +60,6 @@ export default {
 //nav>ul比nav ul限定更严格，必须后面的元素只比前面的低一个级别。
 <style lang="stylus" rel="stylesheet/stylus">
 @import './common/stylus/mixin.styl'
-
 .tab
   display: flex
   width: 100%
@@ -54,16 +67,13 @@ export default {
   line-height: 40px
   // border-bottom: 1px solid rgba(7, 17, 27, 0.1)
   border-1px(rgba(7, 17, 27, 0.1))
-
   .tab-item
     flex: 1
     text-align: center
-
     & > a
       display: block
       font-size: 14px
       color: rgb(77, 85, 93)
-
       &.active
         color: rgb(240, 20, 20)
 </style>
