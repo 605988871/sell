@@ -74,6 +74,7 @@
 import star from "components/goods/star/star";
 import split from "components/goods/split/split";
 import BScroll from "better-scroll";
+import { saveToLocal, loadFromLocal } from "common/js/store";
 
 export default {
   name: "",
@@ -84,7 +85,9 @@ export default {
   },
   data() {
     return {
-      favorite: false
+      favorite: (() => {
+        return loadFromLocal(this.seller.id, "favorite", false);
+      })()
     };
   },
 
@@ -94,8 +97,8 @@ export default {
   },
 
   computed: {
-    favoriteText(){
-      return this.favorite? '已收藏':'收藏'
+    favoriteText() {
+      return this.favorite ? "已收藏" : "收藏";
     }
   },
 
@@ -113,11 +116,12 @@ export default {
     this._initPics();
   },
   methods: {
-    toggleFavorite(event){
-      if(!event._constructed){
-        return
+    toggleFavorite(event) {
+      if (!event._constructed) {
+        return;
       }
-      this.favorite = !this.favorite
+      this.favorite = !this.favorite;
+      saveToLocal(this.seller.id, "favorite", this.favorite);
     },
     _initScroll() {
       if (!this.scroll) {
@@ -136,19 +140,19 @@ export default {
       if (this.seller.pics) {
         let picWidth = 120;
         let margin = 6;
-        let width = (picWidth + margin) * this.seller.pics.length-margin;
+        let width = (picWidth + margin) * this.seller.pics.length - margin;
         this.$refs.picList.style.width = width + "px";
-        if(!this.picScroll){
+        if (!this.picScroll) {
           this.$nextTick(() => {
-          this.picScroll = new BScroll(this.$refs.picWrapper, {
-            scrollX: true,
-            eventPassthrough: "vertical" //在横向轮播图中，我们可以横向滚动，而纵向的滚动还是保留页面原生滚动，我们可以设置 eventPassthrough 为 vertical。
+            this.picScroll = new BScroll(this.$refs.picWrapper, {
+              scrollX: true,
+              eventPassthrough: "vertical" //在横向轮播图中，我们可以横向滚动，而纵向的滚动还是保留页面原生滚动，我们可以设置 eventPassthrough 为 vertical。
+            });
           });
-        });
-        }else{
-          this.$nextTick(()=>{
-            this.picScroll.refresh()
-          })
+        } else {
+          this.$nextTick(() => {
+            this.picScroll.refresh();
+          });
         }
       }
     }

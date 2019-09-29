@@ -12,7 +12,8 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <router-view :seller="seller"></router-view>
+    <!-- keep-alive用来缓存组件,避免多次加载相应的组件,减少性能消耗 -->
+    <keep-alive><router-view :seller="seller"></router-view></keep-alive>
   </div>
 </template>
 
@@ -26,7 +27,6 @@ export default {
       seller: {
         id: (() => {
           let queryParam = urlParse();
-          console.log(queryParam);
           return queryParam.id;
         })()
       }
@@ -43,7 +43,6 @@ export default {
         // Object.assign(target, source1, source2);
         // target  {a:1, b:2, c:3}
         this.seller = Object.assign({}, this.seller, response.data);
-
       }
     });
   },
